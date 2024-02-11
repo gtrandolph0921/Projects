@@ -1,7 +1,7 @@
 -- "pizza_sales" Data Exploration
 
--- Data Set
--- Shows the complete data set
+-- pizza_sales.csv Data Set
+-- Shows the complete data set of pizza_sales
 
 SELECT * FROM pizza_sales
 
@@ -54,7 +54,7 @@ SELECT DATEPART(ISO_WEEK, order_date) AS Week_Number, YEAR(order_date) AS Order_
 	ORDER BY DATEPART(ISO_WEEK, order_date), YEAR(order_date)
 
 
--- Sales Percentage
+-- Sales Percentage by Category
 -- Shows the Percentage of Pizza Sales by Pizza Category
 
 SELECT pizza_category AS Pizza_Category, CAST(SUM(total_price) * 100 / 
@@ -62,6 +62,53 @@ SELECT pizza_category AS Pizza_Category, CAST(SUM(total_price) * 100 /
 	AS DECIMAL(10,2)) AS Percentage
 	FROM pizza_sales
 	GROUP BY pizza_category
+
+
+-- Sales Percentage by Size
+-- Shows the Percentage of Pizza Sales by Pizza Size
+
+SELECT pizza_size AS Pizza_Size, CAST(SUM(total_price) * 100 / 
+(SELECT SUM(total_price) FROM pizza_sales) AS DECIMAL(10,2)) 
+AS Pizza_Sales_Percentage
+	FROM pizza_sales
+	GROUP BY pizza_size
+	ORDER BY Pizza_Sales_Percentage
+
+
+-- Total Sales by Category
+-- Shows total sales of pizzas by pizza category
+
+SELECT pizza_category AS Pizza_Category, CAST(SUM(total_price) AS DECIMAL(10,2)) 
+AS Total_Sales 
+	FROM pizza_sales
+	GROUP BY pizza_category
+
+
+-- Best Pizza by Revenue
+-- Shows top 5 Pizza based on sales
+
+SELECT TOP 5 pizza_name, CAST(SUM(total_price) AS DECIMAL(10,2)) 
+AS Total_Revenue FROM pizza_sales
+	GROUP BY pizza_name
+	ORDER BY Total_Revenue DESC
+
+
+-- Best Pizza by Quantity
+-- Shows top 5 Pizza based on total pizza quantity sold
+
+SELECT TOP 5 pizza_name, CAST(SUM(quantity) AS DECIMAL(10,2)) AS Total_Quantity FROM pizza_sales
+	GROUP BY pizza_name
+	ORDER BY Total_Quantity DESC
+
+
+-- Best Pizza by Order
+-- Show top 5 Pizza based on total pizza orders made
+
+SELECT TOP 5 pizza_name, CAST(SUM(order_id) AS DECIMAL(10,2)) 
+AS Total_Order FROM pizza_sales
+	GROUP BY pizza_name
+	ORDER BY Total_Order DESC
+
 
 
 
